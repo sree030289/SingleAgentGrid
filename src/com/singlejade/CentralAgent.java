@@ -146,25 +146,33 @@ public class CentralAgent extends Agent {
     }
 
     private double requestEnergyFromBattery(int hour, double requiredEnergy) {
+        double batterySOC = getBatterySOC(); // Get the current SOC
+        double batteryCapacity = getBatteryCapacity(); // Total battery capacity in kWh
+
+        // Calculate the maximum allowable discharge to maintain SOC >= 20%
+        double minSOCThreshold = 20.0; // Minimum SOC percentage
+        double minSOCLevel = batteryCapacity * (minSOCThreshold / 100.0); // Minimum allowable charge level
+        double availableForDischarge = Math.max(0, (batterySOC / 100.0 * batteryCapacity) - minSOCLevel);
+
+        // Only request the amount that can be discharged while maintaining SOC >= 20%
+        double dischargeAmount = Math.min(requiredEnergy, availableForDischarge);
+
+        if (dischargeAmount <= 0) {
+            System.out.println("Battery SOC too low to discharge. SOC is at or below 20%.");
+            return 0; // No energy can be discharged
+        }
+
+        // Send the discharge request to the BatteryAgent
         ACLMessage batteryRequest = new ACLMessage(ACLMessage.REQUEST);
         batteryRequest.addReceiver(getAID("BatteryAgent"));
-        batteryRequest.setContent("discharge:" + hour + ":" + requiredEnergy);
+        batteryRequest.setContent("discharge:" + hour + ":" + dischargeAmount);
         send(batteryRequest);
-        System.out.println("Sending battery discharge request for hour " + hour);
 
         ACLMessage batteryResponse = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
         if (batteryResponse != null) {
             double dischargedAmount = Double.parseDouble(batteryResponse.getContent());
-            double newSOC = getBatterySOC();
-
-            // Adjust discharge to prevent SOC from dropping below 20%
-            if (newSOC < 20) {
-                double maxAllowedDischarge = getBatteryCapacity() * (newSOC / 100) - (getBatteryCapacity() * 0.2);
-                dischargedAmount = Math.max(0, maxAllowedDischarge);
-                System.out.println("Limiting discharge to maintain minimum SOC of 20%. Discharge adjusted to: " + dischargedAmount + " kWh.");
-            }
-
-            return dischargedAmount;
+            System.out.println("Battery discharged: " + dischargedAmount + " kWh for hour " + hour);
+            return dischargedAmount; // Actual discharged amount
         } else {
             System.out.println("No response received for battery discharge request");
             return 0;
@@ -172,15 +180,13 @@ public class CentralAgent extends Agent {
     }
 
 
+
     private double handleSurplusEnergy(double solarSurplus, double windSurplus) {
         double totalSurplus = solarSurplus + windSurplus;
-        double batterySOC = getBatterySOC();
 
         if (totalSurplus > 0) {
-            if (batterySOC >= 90) {
-                System.out.println("Battery SOC is above 90%. Limiting charging and sending remaining surplus to the grid.");
-                return totalSurplus;
-            } else {
+            double batterySOC = getBatterySOC();
+            if (batterySOC < 90) {
                 double spaceAvailable = getBatteryCapacity() * 0.9 - (batterySOC / 100 * getBatteryCapacity());
                 double chargeAmount = Math.min(totalSurplus, spaceAvailable);
 
@@ -188,28 +194,21 @@ public class CentralAgent extends Agent {
                 batteryChargeRequest.addReceiver(getAID("BatteryAgent"));
                 batteryChargeRequest.setContent("charge:0:" + chargeAmount);
                 send(batteryChargeRequest);
-                System.out.println("Sending surplus energy storage request to BatteryAgent");
 
                 ACLMessage batteryChargeResponse = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
                 if (batteryChargeResponse != null) {
                     double batteryCharge = Double.parseDouble(batteryChargeResponse.getContent());
-                    System.out.println("Received battery charge response: " + batteryCharge);
-
-                    if (batterySOC + (batteryCharge / getBatteryCapacity()) * 100 > 90) {
-                        double excessCharge = (batterySOC + (batteryCharge / getBatteryCapacity()) * 100) - 90;
-                        System.out.println("Limiting charge to prevent SOC from exceeding 90%. Excess of " + excessCharge + " kWh sent to the grid.");
-                        return totalSurplus - batteryCharge + excessCharge;
-                    }
-
-                    return totalSurplus - batteryCharge;
-                } else {
-                    System.out.println("No response received for battery charge request");
-                    return totalSurplus;
+                    System.out.println("Battery charged with: " + batteryCharge + " kWh. Remaining surplus: " + (totalSurplus - batteryCharge) + " kWh sent to the grid.");
+                    return totalSurplus - batteryCharge; // Surplus sent to the grid
                 }
             }
+
+            System.out.println("Battery SOC is above 90%. All surplus sent to the grid.");
+            return totalSurplus; // All surplus goes to the grid if no battery space
         }
-        return 0;
+        return 0; // No surplus energy
     }
+
 
 
     private double requestEnergyFromGrid(double remainingLoad) {

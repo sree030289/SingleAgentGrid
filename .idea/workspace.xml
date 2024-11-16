@@ -4,27 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a045c10-c0f4-4c55-bdff-3b855abd0c87" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_lang3_3_17_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/jade_4_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/opencsv_5_5_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SingleAgentGrid.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/Battery.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/BatteryGUI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/CentralAgent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/Grid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/Load.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/SolarGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/WindGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/energy_data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/singlejade/energy_distribution_log.csv" afterDir="false" />
+    <list default="true" id="7a045c10-c0f4-4c55-bdff-3b855abd0c87" name="Changes" comment="Added final code with grid">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/singlejade/CentralAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/singlejade/CentralAgent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,10 +68,33 @@
       <option name="presentableId" value="Default" />
       <updated>1731196136253</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added final code with grid">
+      <created>1731242810896</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731242810896</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added final code with grid" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added final code with grid" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/singlejade/CentralAgent.java</url>
+          <line>240</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SingleAgentGrid$Main.ic" NAME="Main Coverage Results" MODIFIED="1731242469581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/SingleAgentGrid$Main.ic" NAME="Main Coverage Results" MODIFIED="1731735336133" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.singlejade.*</FILTER>
     </SUITE>
   </component>
